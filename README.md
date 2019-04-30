@@ -2,6 +2,9 @@
 
 This repository contains the required Ansible templates and the Vagrant setup file to automate a simple APIM and Analytics setup.
 
+The source WSO2 ansible location can be found over here -
+      https://github.com/wso2/ansible-apim/tree/v2.6.0.1
+      
 The sample automation has 4 nodes setup wtih 2 APIM and 2 Analytics nodes for version 2.6.0.
 
 Please follow the following steps to establish the setup.
