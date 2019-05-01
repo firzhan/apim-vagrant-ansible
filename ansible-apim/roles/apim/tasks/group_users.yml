@@ -1,0 +1,27 @@
+- name: Check if '{{ wso2_group }}' exists
+  shell: "cat /etc/group | grep {{ wso2_group }}"
+  register: group_check
+  failed_when: "'FAILED' in group_check.stderr"
+- name: Check if '{{ wso2_group }}' can be created
+  shell: "which groupadd"
+  register: groupadd_check
+  failed_when: "'FAILED' in group_check.stderr"
+- name: fail the play if the previous command did not succeed
+  fail: msg="The command 'groupadd' not available"
+  when: groupadd_check.rc > 0
+- name: Create '{{ wso2_group }}'
+  group:
+    name: "{{ wso2_group }}"
+    state: present
+  when: group_check.rc > 0
+- name: Check if '{{ wso2_user }}' exists
+  shell: "cat /etc/passwd | grep {{ wso2_user }}"
+  register: user_check
+  failed_when: "'FAILED' in user_check.stderr"
+- name: Create '{{ wso2_user }}'
+  user:
+    name: "{{ wso2_user }}"
+    password: "{{ wso2_user_password | password_hash('sha512') }}"
+    comment: "WSO2 {{ product_name }} user"
+    group: "{{ wso2_group }}"
+  when: user_check.rc > 0
